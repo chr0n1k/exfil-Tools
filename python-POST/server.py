@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 from flask import Flask, request, jsonify
-import os
 from pathlib import Path
+import os
+import uuid
 
 app = Flask(__name__)
 
-HOME_DIR = Path.home()
+BASE_DIR = Path.home() / "uploads"
+BASE_DIR.mkdir(parents=True, exist_ok=True)
 
-UPLOAD_DIR = HOME_DIR / "uploads"
-TEMP_DIR = UPLOAD_DIR / ".chunks"
 
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
+def get_upload_paths(user, upload_id):
+    user_dir = BASE_DIR / user
+    upload_dir = user_dir / upload_id
+    chunk_dir = upload_dir / ".chunks"
 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(TEMP_DIR, exist_ok=True)
+    chunk_dir.mkdir(parents=True, exist_ok=True)
+
+    return user_dir, upload_dir, chunk_dir
 
 
 @app.route('/upload', methods=['POST'])
@@ -23,43 +26,66 @@ def upload_chunk():
     filename = request.form.get('filename')
     chunk_index = request.form.get('chunk_index')
     total_chunks = request.form.get('total_chunks')
+    upload_id = request.form.get('upload_id')
+    user = request.form.get('user')
 
-    if not file or not filename:
-        return jsonify({"error": "Missing file or filename"}), 400
+    if not all([file, filename, chunk_index, total_chunks, upload_id, user]):
+        return jsonify({"error": "Missing parameters"}), 400
 
     chunk_index = int(chunk_index)
     total_chunks = int(total_chunks)
 
-    chunk_filename = f"{filename}.part{chunk_index}"
-    chunk_path = os.path.join(TEMP_DIR, chunk_filename)
+    _, upload_dir, chunk_dir = get_upload_paths(user, upload_id)
 
+    chunk_path = chunk_dir / f"chunk_{chunk_index}"
     file.save(chunk_path)
 
-    # Check if all chunks are uploaded
-    existing_chunks = [
-        f for f in os.listdir(TEMP_DIR)
-        if f.startswith(filename + ".part")
-    ]
+    # Check completion
+    existing_chunks = list(chunk_dir.glob("chunk_*"))
 
     if len(existing_chunks) == total_chunks:
-        final_path = os.path.join(UPLOAD_DIR, filename)
+        final_path = upload_dir / filename
 
         with open(final_path, 'wb') as outfile:
             for i in range(total_chunks):
-                part_path = os.path.join(TEMP_DIR, f"{filename}.part{i}")
+                part_path = chunk_dir / f"chunk_{i}"
                 with open(part_path, 'rb') as infile:
                     outfile.write(infile.read())
 
-                os.remove(part_path)
+        # Cleanup
+        for f in chunk_dir.glob("*"):
+            f.unlink()
+        chunk_dir.rmdir()
 
         return jsonify({
-            "message": "File reassembled successfully",
-            "path": final_path
+            "message": "File reassembled",
+            "path": str(final_path)
         }), 200
 
     return jsonify({
         "message": f"Chunk {chunk_index} uploaded"
     }), 200
+
+
+@app.route('/status', methods=['GET'])
+def upload_status():
+    upload_id = request.args.get('upload_id')
+    user = request.args.get('user')
+
+    if not upload_id or not user:
+        return jsonify({"error": "Missing parameters"}), 400
+
+    _, _, chunk_dir = get_upload_paths(user, upload_id)
+
+    if not chunk_dir.exists():
+        return jsonify({"uploaded_chunks": []})
+
+    uploaded = [
+        int(p.name.split("_")[1])
+        for p in chunk_dir.glob("chunk_*")
+    ]
+
+    return jsonify({"uploaded_chunks": uploaded})
 
 
 if __name__ == '__main__':
