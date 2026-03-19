@@ -8,7 +8,7 @@ Install all requirements on server before runnung server.py:
 `python3 -m pip install -r requirements.txt`
 
 Once the requirement are ready, run the server.py script:
-./image.png
+(./image.png)
 
 ## Execution on target:
 **Step 1:** Split the file into chunks
