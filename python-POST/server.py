@@ -99,4 +99,26 @@ def upload_status():
 
 
 if __name__ == '__main__':
+
+    
+    print("python-POST Server")
+    print("Written by: Amarjit Labhuram (@amarjit_labu)")
+    
+    print(r"""
+	   p   y   t   h   o   n   -   P   O   S   T
+	  -----------------------------------------
+	     ____        _   _                 
+	    |  _ \ _   _| |_| |__   ___  _ __  
+	    | |_) | | | | __| '_ \ / _ \| '_ \ 
+	    |  __/| |_| | |_| | | | (_) | | | |
+	    |_|    \__, |\__|_| |_|\___/|_| |_|
+	           |___/        POST
+           ╠══════════════════════════════════════╣
+	   ║  Covert HTTP POST Communication      ║
+	   ║  Lightweight | Stealth | Modular     ║
+	   ╚══════════════════════════════════════╝
+	""")
+    print("python-POST module loaded")
+
     app.run(host='0.0.0.0', port=5000)
+
