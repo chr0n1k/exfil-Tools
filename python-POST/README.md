@@ -7,11 +7,11 @@ Install all requirements on server before runnung server.py:
 
 `python3 -m pip install -r requirements.txt`
 
-Step 1: Split the file into chunks
+**Step 1:** Split the file into chunks
 
 `split -b 5M yourfile.zip chunk_`
 
------
+
 This creates:
 
 **chunk_aa**
@@ -22,7 +22,7 @@ This creates:
 
 **...**
 
-Step 2: Upload chunks with curl by creating a bash file on target with below: (Ensure you modify values like **<SERVER_IP>**)
+**Step 2:** Upload chunks with curl by creating a bash file on target with below: (Ensure you modify values like **<SERVER_IP>**)
 
 ```toml
 TOTAL=$(ls chunk_* | wc -l)
