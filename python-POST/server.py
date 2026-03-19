@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""
+python-POST Server.
+
+Written by: Amarjit Labhuram @amarjit_labu
+GIT: https://github.com/chr0n1k
+
+This is the server side which will host a listener and collect the chunks of 
+exfiltrated data into the upload folder created in the users $home directory.
+"""
+
 from flask import Flask, request, jsonify
 from pathlib import Path
 import os
