@@ -13,9 +13,9 @@ Step 1: Split the file into chunks
 
 This creates:
 
-`chunk_aa<br>
-chunk_ab<br>
-chunk_ac<br>
+`chunk_aa  
+chunk_ab  
+chunk_ac  
 ...`
 
 Step 2: Upload chunks with curl by creating a bash file on target with below: (Ensure you modify values like **<SERVER_IP>**)
