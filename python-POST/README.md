@@ -1,13 +1,13 @@
 # python-POST
 
 ## What is this for?
-This is a toolkit for exfiltrating over HTTP using **POST** requests to send out chunked files over to a lisening flask server running the **server.py** script. It requires the listening server to be running on Python 3.1 or higher and needs flask. When the script is executed it will create a folder called **upload** in the **$home** path of the user executing the script. This is where the exfiltrated files get sent to.
+This is a toolkit for exfiltrating over HTTP using **POST** requests to send out chunked files over to a lisening flask server running the **server.py** script. It requires the listening server to be running on Python 3.1 or higher and needs flask. When the script is executed it will create a folder same as the **upload_id** supplied in the exfil command that will create a subfolder in the **upload** directory found in the **$home** path of the user executing the script. This is where the exfiltrated files get sent to.
 
-Install all requirements on server before runnung server.py:
+Install all requirements on server before hand:
 
 `python3 -m pip install -r requirements.txt`
 
-Once the requirement are ready, run the server.py script:
+Once the requirement are ready, run the **server.py** script:
 
 `python3 server.py`
 
